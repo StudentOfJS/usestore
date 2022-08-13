@@ -1,8 +1,24 @@
 {
   "name": "usestore",
-  "private": true,
+  "author": "Rod Lewis",
+  "description": "React state management hook",
+  "private": false,
   "version": "0.0.0",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StudentOfJS/usestore.git"
+  },
+  "keywords": [
+    "typescript",
+    "react",
+    "state management",
+    "state management",
+    "hooks",
+    "localStorage",
+    "sessionStorage"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
