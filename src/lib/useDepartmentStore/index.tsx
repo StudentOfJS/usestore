@@ -1,68 +1,10 @@
-import { useEffect, useReducer, useState } from 'react';
-type StoreType = 'localStorage' | 'sessionStorage'
+import { useEffect, useReducer } from 'react';
+import { createReducer } from '../localStore';
+import { StoreType, StoreAction } from '../types';
 
 interface useDepartmentStoreProps {
   initialState: Record<string, any>;
   storeType?: StoreType
-}
-
-type State = Record<string, string>
-enum StoreAction {
-  init = 'INIT',
-  get = 'GET',
-  set = 'SET',
-  remove = 'REMOVE',
-}
-interface Action {
-  type: StoreAction,
-  key: string,
-  value?: any,
-}
-
-const Set = (key: string, value: any, storeType: StoreType = 'sessionStorage') => {
-  window[storeType].setItem(key, JSON.stringify(value));
-  window.dispatchEvent(new Event('storage'));
-}
-const Get = (key: string, storeType: StoreType = 'sessionStorage') => {
-  let dataString = window[storeType].getItem(key)
-  return dataString ? JSON.parse(dataString) : null
-}
-const Remove = (key: string, storeType: StoreType = 'sessionStorage') => {
-  window[storeType].deleteItem(key)
-  window.dispatchEvent(new Event('storage'));
-}
-
-const createReducer = (storeType: StoreType) => (state: State, action: Action) => {
-  switch (action.type) {
-    case StoreAction.init: {
-      let newState = {...state}
-      Object.keys(state).forEach(key => {
-        let value = Get(key, storeType)
-        if(value) {
-          newState[key] = value
-        } else {
-          let value = JSON.stringify(state[key])
-          Set(key, value, storeType)
-          newState[key] = value
-        }
-      })
-      return newState;
-    }
-    case StoreAction.get: {
-      let value = Get(action.key, storeType)
-      return {...state, [action.key]: value};
-    }
-    case StoreAction.set: {
-      Set(action.key, action?.value ?? "", storeType)
-      return {...state, [action.key]: action.value};
-    }
-    case StoreAction.remove: {
-      Remove(action.key, storeType)
-      return {...state, [action.key]: undefined};
-    }
-    default:
-      return state;
-  }
 }
 
 export default function useDepartmentStore({
@@ -87,5 +29,9 @@ export default function useDepartmentStore({
     window.dispatchEvent(new Event('storage'));
   }, [state]);
 
-  return [state, dispatch];
+  return {
+    state,
+    set: (key: string, value: any) => dispatch({type: StoreAction.set, key, value}),
+    remove: (key: string) => dispatch({type: StoreAction.remove, key})
+  };
 }
