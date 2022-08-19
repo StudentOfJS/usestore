@@ -84,6 +84,15 @@ describe('useStore with local storage: ', function () {
         let [count] = result.current
         expect(count).toBe(1)
     })
+    it('should increment counter with a function', () => {
+        const { result } = renderHook(() => useStore<number>('test', 'localStorage'))
+        act(() => {
+            let [_, setCount] = result.current
+            setCount(count =>  count + 9)
+        })
+        let [count] = result.current
+        expect(count).toBe(9)
+    })
     it('should update localStorage', () => {
         const { result } = renderHook(() => useStore<number>('test', 'localStorage'))
 
