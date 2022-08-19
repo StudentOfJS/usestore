@@ -2,15 +2,9 @@ import { useEffect, useReducer } from 'react';
 import { createReducer } from '../localStore';
 import { StoreType, StoreAction } from '../types';
 
-interface useDepartmentStoreProps {
-  initialState: Record<string, any>;
-  storeType?: StoreType
-}
-
-export default function useDepartmentStore({
-  initialState,
-  storeType = 'sessionStorage',
-}: useDepartmentStoreProps) {
+export default function useDepartmentStore(
+  initialState: Record<string, any>,
+  storeType: StoreType = 'sessionStorage') {
   const [state, dispatch] = useReducer(createReducer(storeType), initialState);
 
   function _syncStore (this: Window, ev: StorageEvent) {
