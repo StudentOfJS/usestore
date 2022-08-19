@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react-hooks'
 import useStore from "../useStore";
+import createStore from "../createStore";
 
 describe('useStore with session storage: ', function () {
     // Mock localStorage
@@ -19,10 +20,11 @@ describe('useStore with session storage: ', function () {
         vi.spyOn(window.sessionStorage, 'clear').mockImplementation(() => {
             store = {};
         })
+        createStore({data: 0, storeKey: 'test'})
     });
 
     it('should increment counter', () => {
-        const { result } = renderHook(() => useStore({ data: 0, storeKey: 'test' }))
+        const { result } = renderHook(() => useStore<number>('test'))
 
         act(() => {
             let [count, setCount] = result.current
@@ -32,7 +34,7 @@ describe('useStore with session storage: ', function () {
         expect(count).toBe(1)
     })
     it('should update sessionStorage', () => {
-        const { result } = renderHook(() => useStore({ data: 0, storeKey: 'test' }))
+        const { result } = renderHook(() => useStore<number>('test'))
 
         act(() => {
             let [count, setCount] = result.current
@@ -41,7 +43,7 @@ describe('useStore with session storage: ', function () {
         expect(sessionStorage.getItem('test')).toBe("10")
     })
     it('should sync state with sessionStorage', () => {
-        const { result } = renderHook(() => useStore({ data: 0, storeKey: 'test' }))
+        const { result } = renderHook(() => useStore<number>('test'))
 
         act(() => {
             let [count, setCount] = result.current
@@ -54,6 +56,7 @@ describe('useStore with session storage: ', function () {
 
 describe('useStore with local storage: ', function () {
     // Mock localStorage
+    
     beforeEach(() => {
         global = global || window;
         let store: Record<string, any> = {};
@@ -69,10 +72,11 @@ describe('useStore with local storage: ', function () {
         vi.spyOn(window.localStorage, 'clear').mockImplementation(() => {
             store = {};
         })
+        createStore({data: 0, storeKey: 'test', storeType: 'localStorage'})
     });
 
     it('should increment counter', () => {
-        const { result } = renderHook(() => useStore({ data: 0, storeKey: 'test', storeType: 'localStorage' }))
+        const { result } = renderHook(() => useStore<number>('test', 'localStorage'))
         act(() => {
             let [count, setCount] = result.current
             setCount(count + 1)
@@ -81,7 +85,7 @@ describe('useStore with local storage: ', function () {
         expect(count).toBe(1)
     })
     it('should update localStorage', () => {
-        const { result } = renderHook(() => useStore({ data: 0, storeKey: 'test', storeType: 'localStorage' }))
+        const { result } = renderHook(() => useStore<number>('test', 'localStorage'))
 
         act(() => {
             let [count, setCount] = result.current
@@ -90,7 +94,7 @@ describe('useStore with local storage: ', function () {
         expect(localStorage.getItem('test')).toBe("10")
     })
     it('should sync state with localStorage', () => {
-        const { result } = renderHook(() => useStore({ data: 0, storeKey: 'test', storeType: 'localStorage' }))
+        const { result } = renderHook(() => useStore<number>('test', 'localStorage'))
 
         act(() => {
             let [count, setCount] = result.current

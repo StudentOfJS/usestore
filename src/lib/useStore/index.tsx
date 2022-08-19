@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react';
-interface UseStoreProps<T> {
-  data?: T;
-  storeKey: string;
-  storeType?: 'localStorage' | 'sessionStorage';
-}
-export default function useStore<T>({
-  data,
-  storeKey,
-  storeType = 'sessionStorage',
-}: UseStoreProps<T>): [T, (newData: T | ((oldData: T) => T)) => void] {
+
+export default function useStore<T>(
+  storeKey: string,
+  storeType: 'localStorage' | 'sessionStorage' = 'sessionStorage'
+): [T, (newData: T | ((oldData: T) => T)) => void] {
   const _getStoreData = () => {
     let dataString = window[storeType].getItem(storeKey);
-    let localData = dataString ? JSON.parse(dataString) : data;
+    let localData = dataString && JSON.parse(dataString);
     return localData;
   };
+
   const [state, setState] = useState(_getStoreData());
   const _syncStore = () => {
-    setState(_getStoreData());
+    setState(_getStoreData() ?? '');
   };
+  const updateState = (data: T | ((oldData: T) => T)) => {
+    let newData = data;
+    if(typeof data === 'function') {
+      let fn = data as (oldData: T) => T;
+      newData =  fn(state)
+    }
+    window[storeType].setItem(storeKey, JSON.stringify(newData));
+    window.dispatchEvent(new Event('storage'));
+  };
+
   useEffect(() => {
     window.addEventListener('storage', _syncStore);
     _syncStore();
@@ -25,10 +31,5 @@ export default function useStore<T>({
       window.removeEventListener('storage', _syncStore);
     };
   }, []);
-  useEffect(() => {
-    window[storeType].setItem(storeKey, JSON.stringify(state));
-    window.dispatchEvent(new Event('storage'));
-  }, [state]);
-
-  return [state, setState];
+  return [state, updateState];
 }
