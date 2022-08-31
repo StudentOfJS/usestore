@@ -8,13 +8,15 @@ export function createStore<T>({
   storeKey,
   storeType = 'sessionStorage',
 }: CreateStoreProps<T>) {
-  let keys = window[storeType].getItem("storeKeys");
-  if (keys?.includes(storeKey)) {
-    let dataString = window[storeType].getItem(storeKey);
-    !dataString && window[storeType].setItem(storeKey, JSON.stringify(data));
-  } else {
-    window[storeType].setItem("storeKeys", keys ? `${keys},${storeKey}` : storeKey);
-    window[storeType].setItem(storeKey, JSON.stringify(data));
+  if(window) {
+    let keys = window[storeType].getItem("storeKeys");
+    if (keys?.includes(storeKey)) {
+      let dataString = window[storeType].getItem(storeKey);
+      !dataString && window[storeType].setItem(storeKey, JSON.stringify(data));
+    } else {
+      window[storeType].setItem("storeKeys", keys ? `${keys},${storeKey}` : storeKey);
+      window[storeType].setItem(storeKey, JSON.stringify(data));
+    }
+    window.dispatchEvent(new Event('storage'));
   }
-  window.dispatchEvent(new Event('storage'));
 }

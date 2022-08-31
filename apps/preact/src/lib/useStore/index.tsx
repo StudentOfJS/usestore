@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'preact/hooks';
 import { getStoreData, updateStoreData, removeStoreData, clearStoreData } from 'store';
 
 export default function useStore<T>(

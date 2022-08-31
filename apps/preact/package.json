@@ -1,0 +1,36 @@
+{
+  "name": "usestore_preact",
+  "author": "Rod Lewis",
+  "description": "Preact state management hook",
+  "private": false,
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StudentOfJS/usestore/preact.git"
+  },
+  "keywords": [
+    "typescript",
+    "preact",
+    "state management",
+    "hooks",
+    "localStorage",
+    "sessionStorage"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "preact": "^10.10.6",
+    "store": "workspace:*"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.3.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.7",
+    "vite-plugin-dts": "^1.4.1"
+  }
+}
