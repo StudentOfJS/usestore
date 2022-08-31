@@ -1,5 +1,5 @@
 import useStore from "./useStore";
-import createStore from "./createStore"
+import {createStore} from "store"
 
 export {
     createStore,

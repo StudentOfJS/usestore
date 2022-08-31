@@ -1,18 +1,14 @@
 import { useEffect, useState } from 'react';
+import { getStoreData, updateStoreData } from 'store';
 
 export default function useStore<T>(
   storeKey: string,
   storeType: 'localStorage' | 'sessionStorage' = 'sessionStorage'
 ): [T, (newData: T | ((oldData: T) => T)) => void] {
-  const _getStoreData = () => {
-    let dataString = window[storeType].getItem(storeKey);
-    let localData = dataString && JSON.parse(dataString);
-    return localData;
-  };
 
-  const [state, setState] = useState(_getStoreData());
+  const [state, setState] = useState(getStoreData(storeKey, storeType));
   const _syncStore = () => {
-    setState(_getStoreData() ?? '');
+    setState(getStoreData(storeKey, storeType) ?? '');
   };
   const updateState = (data: T | ((oldData: T) => T)) => {
     let newData = data;
@@ -20,8 +16,7 @@ export default function useStore<T>(
       let fn = data as (oldData: T) => T;
       newData =  fn(state)
     }
-    window[storeType].setItem(storeKey, JSON.stringify(newData));
-    window.dispatchEvent(new Event('storage'));
+    updateStoreData(newData, storeKey, storeType);
   };
 
   useEffect(() => {

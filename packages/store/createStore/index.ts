@@ -3,7 +3,7 @@ interface CreateStoreProps<T> {
   storeKey: string;
   storeType?: 'localStorage' | 'sessionStorage';
 }
-export default function createStore<T>({
+export function createStore<T>({
   data,
   storeKey,
   storeType = 'sessionStorage',
