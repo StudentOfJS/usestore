@@ -1,7 +1,4 @@
 import useStore from "./useStore";
-import {createStore} from "store"
+import { createStore } from "store";
 
-export {
-    createStore,
-    useStore
-};
+export { createStore, useStore };

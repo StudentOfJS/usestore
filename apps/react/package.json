@@ -1,5 +1,5 @@
 {
-  "name": "usestore",
+  "name": "@usestore/react",
   "author": "Rod Lewis",
   "description": "React state management hook",
   "private": false,
@@ -8,7 +8,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/StudentOfJS/usestore.git"
+    "url": "https://github.com/StudentOfJS/usestore/react.git"
   },
   "keywords": [
     "typescript",
