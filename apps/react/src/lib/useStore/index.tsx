@@ -1,39 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   getStoreData,
   updateStoreData,
   removeStoreData,
   clearStoreData,
-} from "store";
+} from 'store';
 
 export default function useStore<T>(
   storeKey: string,
-  storeType: "localStorage" | "sessionStorage" = "sessionStorage"
+  storeType: 'localStorage' | 'sessionStorage' = 'sessionStorage'
 ): [
   T,
   (newData: T | ((oldData: T) => T)) => void,
-  (storeKey: string, storeType?: "localStorage" | "sessionStorage") => void,
-  (storeType?: "localStorage" | "sessionStorage") => void
+  (storeKey: string, storeType?: 'localStorage' | 'sessionStorage') => void,
+  (storeType?: 'localStorage' | 'sessionStorage') => void
 ] {
-  const [state, setState] = useState(getStoreData(storeKey, storeType));
-  const _syncStore = () => {
-    setState(getStoreData(storeKey, storeType) ?? "");
+  const [state, setState] = useState<T>();
+  const _syncStore = (event: CustomEvent<{
+    key: string;
+    value: T;
+  }>) => {
+    let { key, value } = event.detail;
+    if (key === storeKey && value !== state) {
+      setState(value);
+    }
   };
   const updateState = (data: T | ((oldData: T) => T)) => {
     let newData = data;
-    if (typeof data === "function") {
+    if (typeof data === 'function') {
       let fn = data as (oldData: T) => T;
-      newData = fn(state);
+      newData = fn(state as T);
     }
+    setState(newData as T);
     updateStoreData(newData, storeKey, storeType);
   };
 
   useEffect(() => {
-    window.addEventListener("storage", _syncStore);
-    _syncStore();
+    window.addEventListener('custom_storage', _syncStore  as EventListener);
+    getStoreData(storeKey);
     return () => {
-      window.removeEventListener("storage", _syncStore);
+      window.removeEventListener('custom_storage', _syncStore as EventListener);
     };
   }, []);
-  return [state, updateState, removeStoreData, clearStoreData];
+  return [state as T, updateState, removeStoreData, clearStoreData];
 }

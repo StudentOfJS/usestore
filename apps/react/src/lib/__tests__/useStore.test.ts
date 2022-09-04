@@ -26,7 +26,7 @@ describe("useStore with session storage: ", function () {
     vi.spyOn(window.sessionStorage, "clear").mockImplementation(() => {
       store = {};
     });
-    createStore({ data: 0, storeKey: "test" });
+    createStore({ initialState: 0, storeKey: "test" });
   });
 
   it("should increment counter", () => {
@@ -84,7 +84,7 @@ describe("useStore with local storage: ", function () {
     vi.spyOn(window.localStorage, "clear").mockImplementation(() => {
       store = {};
     });
-    createStore({ data: 0, storeKey: "test", storeType: "localStorage" });
+    createStore({ initialState: 0, storeKey: "test", storeType: "localStorage" });
   });
 
   it("should increment counter", () => {
