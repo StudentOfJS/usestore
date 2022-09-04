@@ -20,7 +20,7 @@ export default defineConfig({
         fileName: (format) => `useStore.${format}.js`,
     },
     rollupOptions: {
-      external: ["preact", "store"],
+      external: ["preact"],
       output: {
         globals: {
           preact: "Preact",

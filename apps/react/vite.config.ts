@@ -20,7 +20,7 @@ export default defineConfig({
       fileName: (format) => `useStore.${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "store"],
+      external: ["react"],
       output: {
         globals: {
           react: "React",
